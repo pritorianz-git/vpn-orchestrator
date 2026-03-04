@@ -1,0 +1,72 @@
+{
+  "ssh": {
+    "user": "root",
+    "port": 22,
+    "key_path": ".\\ssh\\orchestrator_ed25519",
+    "extra_opts": [
+      "-o", "StrictHostKeyChecking=accept-new",
+      "-o", "UserKnownHostsFile=%USERPROFILE%\\.ssh\\known_hosts",
+      "-o", "ServerAliveInterval=15",
+      "-o", "ServerAliveCountMax=3"
+    ]
+  },
+
+  "ports": { "min": 30000, "max": 50000 },
+
+  "ip_plan": {
+    "base_cidr": "172.30.255.0/24",
+    "link_prefix": 30,
+    "max_exits": 10
+  },
+
+  "awg_profile": {
+    "mtu": 1380,
+    "persistent_keepalive": 25,
+    "jc": 5,
+    "jmin": 60,
+    "jmax": 170,
+    "s1": 45,
+    "s2": 80,
+    "s3": 55,
+    "s4": 95,
+    "h1": 7,
+    "h2": 12,
+    "h3": 3,
+    "h4": 15,
+    "advanced_security": "on"
+  },
+
+  "routing": {
+    "awg_table_name": "awg-out",
+    "awg_table_id": 200,
+    "ip_rule_priority": 1000,
+
+    "monitor": {
+      "health_interval_sec": 10,
+      "fail_threshold": 3,
+	  "recovery_threshold": 2,
+      "handshake_max_age_sec": 180
+    }
+  },
+
+  "gateway": {
+    "host": "111.222.333.444",
+    "wg_core": {
+      "ifname": "wg-core",
+      "address_cidr": "172.30.0.2/30",
+	  "listen_port": 41234,
+      "mtu": 1380,
+      "peer": {
+		  "public_key": "PUB_KEY",
+		  "endpoint": "123.123.123.123:41234",
+		  "allowed_ips": ["172.30.0.1/32"],
+		  "persistent_keepalive": 25
+	  }
+    }
+  },
+
+  "exits": [
+    { "name": "exit-1", "host": "222.333.444.555" },
+	{ "name": "exit-2", "host": "333.444.555.666" }
+  ]
+}
